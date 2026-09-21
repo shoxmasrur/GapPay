@@ -41,17 +41,13 @@ export class RolesGuard implements CanActivate {
         return true;
       }
 
-      throw new ForbiddenException(
-        'Bu foydalanuvchiga ruxsat yoq',
-      );
+      throw new ForbiddenException('Bu foydalanuvchiga ruxsat yoq');
     }
 
     const hasRole = requiredRoles.includes(user.role);
 
     if (!hasRole) {
-      throw new ForbiddenException(
-        'Ruxsat etilmagan foydalanuvchi',
-      );
+      throw new ForbiddenException('Ruxsat etilmagan foydalanuvchi');
     }
 
     return true;

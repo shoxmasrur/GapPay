@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
 export const env = {
   PORT: Number(process.env.PORT),
@@ -22,5 +22,10 @@ export const env = {
     TTL: Number(process.env.OTP_TTL),
     RESEND: Number(process.env.OTP_RESEND),
     ATTEMPTS: Number(process.env.OTP_ATTEMPTS),
+  },
+
+  TELEGRAM: {
+    TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+    ID: process.env.TELEGRAM_CHAT_ID,
   },
 };

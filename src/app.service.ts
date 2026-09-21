@@ -4,12 +4,15 @@ import { env } from './config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
+import { AllExceptionsFilter } from './common/filter/all-exception.filter';
 
 export class App {
   static async main() {
     const app = await NestFactory.create(AppModule);
 
-    const url = '/api/v1'
+    const url = '/api/v1';
+
+    app.useGlobalFilters(new AllExceptionsFilter());
 
     app.useGlobalPipes(
       new ValidationPipe({
@@ -33,6 +36,8 @@ export class App {
 
     SwaggerModule.setup(`${url}/docs`, app, document);
 
-    await app.listen(env.PORT, () => console.log(`Server running on port`, env.PORT));
+    await app.listen(env.PORT, () =>
+      console.log(`Server running on port`, env.PORT),
+    );
   }
 }

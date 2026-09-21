@@ -1,3 +1,3 @@
-import { App } from "./app.service";
+import { App } from './app.service';
 
-App.main()
+App.main();
