@@ -1,8 +1,8 @@
 import {
-    BadRequestException,
-    HttpException,
-    HttpStatus,
-    Injectable,
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
 } from '@nestjs/common';
 import { createHmac, randomInt } from 'crypto';
 import { RedisService } from '../../config/redis/redis.service';
@@ -10,129 +10,123 @@ import { env } from '../../config';
 
 @Injectable()
 export class OtpService {
-    constructor(private readonly redisService: RedisService) { }
+  constructor(private readonly redisService: RedisService) {}
 
-    private normalizePhone(value: string): string {
-        const phone = value.replace(/\D/g, '');
+  private normalizePhone(value: string): string {
+    const phone = value.replace(/\D/g, '');
 
-        if (!/^998\d{9}$/.test(phone)) {
-            throw new BadRequestException(
-                'Telefon raqam notogri. Masalan: +998901234567',
-            );
-        }
-
-        return phone;
+    if (!/^998\d{9}$/.test(phone)) {
+      throw new BadRequestException(
+        'Telefon raqam notogri. Masalan: +998901234567',
+      );
     }
 
-    async getResetPhone(resetToken: string) {
-        const phone = await this.redisService.client.get(
-            `otp:reset:${resetToken}`,
-        );
+    return phone;
+  }
 
-        if (!phone) {
-            throw new BadRequestException(
-                'Reset token noto‘g‘ri yoki muddati tugagan',
-            );
-        }
+  async getResetPhone(resetToken: string) {
+    const phone = await this.redisService.client.get(`otp:reset:${resetToken}`);
 
-        return phone;
+    if (!phone) {
+      throw new BadRequestException(
+        'Reset token noto‘g‘ri yoki muddati tugagan',
+      );
     }
 
-    async deleteResetToken(resetToken: string) {
-        await this.redisService.client.del(
-            `otp:reset:${resetToken}`,
-        );
+    return phone;
+  }
+
+  async deleteResetToken(resetToken: string) {
+    await this.redisService.client.del(`otp:reset:${resetToken}`);
+  }
+
+  private generateOtp(): string {
+    return randomInt(0, 1_000_000).toString().padStart(6, '0');
+  }
+
+  private hashOtp(phone: string, code: string): string {
+    return createHmac('sha256', env.OTP.SECRET)
+      .update(`${phone}:${code}`)
+      .digest('hex');
+  }
+
+  private otpKey(phone: string) {
+    return `otp:value:${phone}`;
+  }
+
+  private attemptsKey(phone: string) {
+    return `otp:attempts:${phone}`;
+  }
+
+  private resendKey(phone: string) {
+    return `otp:resend:${phone}`;
+  }
+
+  async sendOtp(phoneInput: string) {
+    const redis = this.redisService.client;
+
+    const phone = this.normalizePhone(phoneInput);
+
+    const otpKey = this.otpKey(phone);
+    const attemptsKey = this.attemptsKey(phone);
+    const resendKey = this.resendKey(phone);
+
+    const cooldown = await redis.set(
+      resendKey,
+      '1',
+      'EX',
+      env.OTP.RESEND,
+      'NX',
+    );
+
+    if (cooldown !== 'OK') {
+      const remaining = await redis.ttl(resendKey);
+
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.TOO_MANY_REQUESTS,
+          message: `OTP qayta yuborish uchun ${Math.max(
+            remaining,
+            1,
+          )} sekund kuting`,
+          retryAfter: Math.max(remaining, 1),
+        },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
 
-    private generateOtp(): string {
-        return randomInt(0, 1_000_000)
-            .toString()
-            .padStart(6, '0');
+    const code = this.generateOtp();
+    const otpHash = this.hashOtp(phone, code);
+
+    try {
+      await redis
+        .multi()
+        .set(otpKey, otpHash, 'EX', env.OTP.TTL)
+        .set(attemptsKey, '0', 'EX', env.OTP.TTL)
+        .exec();
+    } catch (error) {
+      await redis.del(otpKey, attemptsKey, resendKey);
+      throw error;
     }
 
-    private hashOtp(phone: string, code: string): string {
-        return createHmac('sha256', env.OTP.SECRET)
-            .update(`${phone}:${code}`)
-            .digest('hex');
-    }
+    return {
+      code,
+      expiresIn: env.OTP.TTL,
+      resendAfter: env.OTP.RESEND,
+    };
+  }
 
-    private otpKey(phone: string) {
-        return `otp:value:${phone}`;
-    }
+  async verifyOtp(phoneInput: string, code: string) {
+    const redis = this.redisService.client;
 
-    private attemptsKey(phone: string) {
-        return `otp:attempts:${phone}`;
-    }
+    const phone = this.normalizePhone(phoneInput);
 
-    private resendKey(phone: string) {
-        return `otp:resend:${phone}`;
-    }
+    const otpKey = this.otpKey(phone);
+    const attemptsKey = this.attemptsKey(phone);
 
-    async sendOtp(phoneInput: string) {
-        const redis = this.redisService.client;
+    const candidateHash = this.hashOtp(phone, code);
 
-        const phone = this.normalizePhone(phoneInput);
-
-        const otpKey = this.otpKey(phone);
-        const attemptsKey = this.attemptsKey(phone);
-        const resendKey = this.resendKey(phone);
-
-        const cooldown = await redis.set(
-            resendKey,
-            '1',
-            'EX',
-            env.OTP.RESEND,
-            'NX',
-        );
-
-        if (cooldown !== 'OK') {
-            const remaining = await redis.ttl(resendKey);
-
-            throw new HttpException(
-                {
-                    statusCode: HttpStatus.TOO_MANY_REQUESTS,
-                    message: `OTP qayta yuborish uchun ${Math.max(
-                        remaining,
-                        1,
-                    )} sekund kuting`,
-                    retryAfter: Math.max(remaining, 1),
-                },
-                HttpStatus.TOO_MANY_REQUESTS,
-            );
-        }
-
-        const code = this.generateOtp();
-        const otpHash = this.hashOtp(phone, code);
-
-        try {
-            await redis
-                .multi()
-                .set(otpKey, otpHash, 'EX', env.OTP.TTL)
-                .set(attemptsKey, '0', 'EX', env.OTP.TTL)
-                .exec();
-        } catch (error) {
-            await redis.del(otpKey, attemptsKey, resendKey);
-            throw error;
-        }
-
-        return {
-            code,
-            expiresIn: env.OTP.TTL,
-            resendAfter: env.OTP.RESEND,
-        };
-    }
-
-    async verifyOtp(phoneInput: string, code: string) {
-        const redis = this.redisService.client;
-
-        const phone = this.normalizePhone(phoneInput);
-
-        const otpKey = this.otpKey(phone);
-        const attemptsKey = this.attemptsKey(phone);
-
-        const candidateHash = this.hashOtp(phone, code);
-
-        const script = `
+    const script = `
       local stored = redis.call('GET', KEYS[1])
 
       if not stored then
@@ -173,54 +167,45 @@ export class OtpService {
       return 0
     `;
 
-        const result = Number(
-            await redis.eval(
-                script,
-                2,
-                otpKey,
-                attemptsKey,
-                candidateHash,
-                String(env.OTP.ATTEMPTS),
-            ),
-        );
+    const result = Number(
+      await redis.eval(
+        script,
+        2,
+        otpKey,
+        attemptsKey,
+        candidateHash,
+        String(env.OTP.ATTEMPTS),
+      ),
+    );
 
-        if (result === -2) {
-            throw new BadRequestException(
-                'OTP kodi mavjud emas yoki muddati tugagan',
-            );
-        }
-
-        if (result === -1) {
-            throw new HttpException(
-                {
-                    statusCode: HttpStatus.TOO_MANY_REQUESTS,
-                    message:
-                        'OTP kiritish urinishlari soni tugadi. Yangi kod sorang.',
-                },
-                HttpStatus.TOO_MANY_REQUESTS,
-            );
-        }
-
-        if (result === 0) {
-            throw new BadRequestException('OTP kodi notogri');
-        }
-        const resetToken = randomInt(
-            100000000,
-            1000000000,
-        ).toString();
-
-        await redis.set(
-            `otp:reset:${resetToken}`,
-            phone,
-            'EX',
-            600,
-        );
-
-        return {
-            success: true,
-            verified: true,
-            phone,
-            resetToken,
-        };
+    if (result === -2) {
+      throw new BadRequestException(
+        'OTP kodi mavjud emas yoki muddati tugagan',
+      );
     }
+
+    if (result === -1) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.TOO_MANY_REQUESTS,
+          message: 'OTP kiritish urinishlari soni tugadi. Yangi kod sorang.',
+        },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+
+    if (result === 0) {
+      throw new BadRequestException('OTP kodi notogri');
+    }
+    const resetToken = randomInt(100000000, 1000000000).toString();
+
+    await redis.set(`otp:reset:${resetToken}`, phone, 'EX', 600);
+
+    return {
+      success: true,
+      verified: true,
+      phone,
+      resetToken,
+    };
+  }
 }

@@ -20,7 +20,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       enableReadyCheck: true,
     });
 
-    this.client.on('error', (error: { message: any; }) => {
+    this.client.on('error', (error: { message: any }) => {
       this.logger.error(`Redis error: ${error.message}`);
     });
   }

@@ -5,6 +5,6 @@ import { OtpService } from '../../infrastructure/otp/otp.service';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, OtpService]
+  providers: [UserService, OtpService],
 })
 export class UserModule {}

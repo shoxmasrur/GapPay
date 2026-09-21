@@ -5,11 +5,6 @@ import { UserModule } from './modules/user/user.module';
 import { RedisModule } from './config/redis/redis.module';
 
 @Module({
-  imports: [
-    PrismaModule,
-    AuthModule,
-    UserModule,
-    RedisModule
-  ]
+  imports: [PrismaModule, AuthModule, UserModule, RedisModule],
 })
 export class AppModule {}

@@ -22,23 +22,16 @@ export class Token {
     return { accessToken, refreshToken };
   }
 
-  static async verifyToken(
-    token: string,
-    type: string,
-  ): Promise<any> {
+  static async verifyToken(token: string, type: string): Promise<any> {
     try {
       const verifiedData = await this.jwt.verifyAsync(token, {
         secret:
-          type === 'access'
-            ? env.TOKEN.ACCESS_KEY
-            : env.TOKEN.REFRESH_KEY,
+          type === 'access' ? env.TOKEN.ACCESS_KEY : env.TOKEN.REFRESH_KEY,
       });
 
       return verifiedData;
     } catch (error) {
-      throw new UnauthorizedException(
-        'Tizimga kirishda nosozlik',
-      );
+      throw new UnauthorizedException('Tizimga kirishda nosozlik');
     }
   }
 

@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../config/prisma/prisma.service';
 import { successRes } from '../../common/helper/success-response';
 import { UserUpdateDto } from './dto/user-update.dto';
@@ -9,155 +14,139 @@ import { Crypt } from '../../infrastructure/lib/Crypt';
 
 @Injectable()
 export class UserService {
-    constructor(
-        private readonly db: PrismaService,
-        private readonly otp: OtpService
-    ) { }
+  constructor(
+    private readonly db: PrismaService,
+    private readonly otp: OtpService,
+  ) {}
 
-    async findAll() {
-        const users = await this.db.user.findMany({
-            select: {
-                id: true,
-                fullName: true,
-                phone: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-            },
-            orderBy: {
-                id: 'asc',
-            },
-        });
+  async findAll() {
+    const users = await this.db.user.findMany({
+      select: {
+        id: true,
+        fullName: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
 
-        return successRes(users);
+    return successRes(users);
+  }
+
+  async findOne(id: number) {
+    const user = await this.db.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        fullName: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Foydalanuvchi topilmadi');
     }
 
-    async findOne(id: number) {
-        const user = await this.db.user.findUnique({
-            where: { id },
-            select: {
-                id: true,
-                fullName: true,
-                phone: true,
-                role: true,
-                createdAt: true,
-            },
-        });
+    return successRes(user);
+  }
 
-        if (!user) {
-            throw new NotFoundException('Foydalanuvchi topilmadi');
-        }
+  async update(userId: number, dto: UserUpdateDto) {
+    const user = await this.db.user.findUnique({
+      where: { id: userId },
+    });
 
-        return successRes(user);
+    if (!user) {
+      throw new NotFoundException('Foydalanuvchi topilmadi');
     }
 
-    async update(
-        userId: number,
-        dto: UserUpdateDto,
-    ) {
-        const user = await this.db.user.findUnique({
-            where: { id: userId },
-        });
+    if (dto.phone && dto.phone !== user.phone) {
+      const existsPhone = await this.db.user.findUnique({
+        where: { phone: dto.phone },
+      });
 
-        if (!user) {
-            throw new NotFoundException('Foydalanuvchi topilmadi');
-        }
-
-        if (dto.phone && dto.phone !== user.phone) {
-            const existsPhone = await this.db.user.findUnique({
-                where: { phone: dto.phone },
-            });
-
-            if (existsPhone) {
-                throw new ConflictException(
-                    'Bunday telefon raqam allaqachon mavjud',
-                );
-            }
-        }
-
-        const updatedUser = await this.db.user.update({
-            where: { id: userId },
-            data: dto,
-            select: {
-                id: true,
-                fullName: true,
-                phone: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-            },
-        });
-
-        return successRes(updatedUser);
+      if (existsPhone) {
+        throw new ConflictException('Bunday telefon raqam allaqachon mavjud');
+      }
     }
 
+    const updatedUser = await this.db.user.update({
+      where: { id: userId },
+      data: dto,
+      select: {
+        id: true,
+        fullName: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
-    async remove(id: number) {
-        const user = await this.db.user.findUnique({
-            where: { id },
-        });
+    return successRes(updatedUser);
+  }
 
-        if (!user) {
-            throw new NotFoundException(
-                'Foydalanuvchi topilmadi',
-            );
-        }
+  async remove(id: number) {
+    const user = await this.db.user.findUnique({
+      where: { id },
+    });
 
-        await this.db.user.delete({
-            where: { id },
-        });
-
-        return successRes({
-            message: 'Foydalanuvchi muvaffaqiyatli ochirildi',
-        });
+    if (!user) {
+      throw new NotFoundException('Foydalanuvchi topilmadi');
     }
 
-    async forgotPassword(phone: string) {
-        const user = await this.db.user.findUnique({
-            where: { phone },
-        });
+    await this.db.user.delete({
+      where: { id },
+    });
 
-        if (!user) {
-            throw new NotFoundException(
-                'Bunday telefon raqamli foydalanuvchi topilmadi',
-            );
-        }
+    return successRes({
+      message: 'Foydalanuvchi muvaffaqiyatli ochirildi',
+    });
+  }
 
-        return this.otp.sendOtp(phone);
+  async forgotPassword(phone: string) {
+    const user = await this.db.user.findUnique({
+      where: { phone },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        'Bunday telefon raqamli foydalanuvchi topilmadi',
+      );
     }
 
-    async verifyOtp(dto: VerifyOtpDto) {
-        return this.otp.verifyOtp(dto.phone, dto.code);
+    return this.otp.sendOtp(phone);
+  }
+
+  async verifyOtp(dto: VerifyOtpDto) {
+    return this.otp.verifyOtp(dto.phone, dto.code);
+  }
+
+  async resetPassword(dto: ResetPasswordDto) {
+    const phone = await this.otp.getResetPhone(dto.resetToken);
+
+    if (phone !== dto.phone.replace(/\D/g, '')) {
+      throw new BadRequestException('Reset token noto‘g‘ri');
     }
 
-    async resetPassword(dto: ResetPasswordDto) {
-        const phone = await this.otp.getResetPhone(
-            dto.resetToken,
-        );
+    const hashedPassword = await Crypt.hash(dto.newPassword);
 
-        if (phone !== dto.phone.replace(/\D/g, '')) {
-            throw new BadRequestException(
-                'Reset token noto‘g‘ri',
-            );
-        }
+    await this.db.user.update({
+      where: { phone: dto.phone },
+      data: {
+        password: hashedPassword,
+      },
+    });
 
-        const hashedPassword = await Crypt.hash(
-            dto.newPassword,
-        );
+    await this.otp.deleteResetToken(dto.resetToken);
 
-        await this.db.user.update({
-            where: { phone: dto.phone },
-            data: {
-                password: hashedPassword,
-            },
-        });
-
-        await this.otp.deleteResetToken(
-            dto.resetToken,
-        );
-
-        return successRes({
-            message: 'Parol muvaffaqiyatli yangilandi',
-        });
-    }
+    return successRes({
+      message: 'Parol muvaffaqiyatli yangilandi',
+    });
+  }
 }
