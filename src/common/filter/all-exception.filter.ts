@@ -38,10 +38,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message = exceptionResponse;
       }
 
-      if (
-        typeof exceptionResponse === 'object' &&
-        exceptionResponse !== null
-      ) {
+      if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
         const data = exceptionResponse as {
           error?: string;
           code?: string;
@@ -62,9 +59,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     const errorStack =
-      exception instanceof Error
-        ? exception.stack
-        : JSON.stringify(exception);
+      exception instanceof Error ? exception.stack : JSON.stringify(exception);
 
     this.logger.error(
       `${request.method} ${request.url} -> ${statusCode} ${message}`,
@@ -86,7 +81,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode,
       code,
       message,
-      ...(details !== undefined ? { details } : {}),
       path: request.url,
       timestamp: new Date().toISOString(),
     });
@@ -100,20 +94,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
     details?: unknown;
     errorStack?: string;
   }): string {
-    const {
-      request,
-      statusCode,
-      code,
-      message,
-      details,
-      errorStack,
-    } = data;
+    const { request, statusCode, code, message, details, errorStack } = data;
 
     const method = this.escapeHtml(request.method);
 
-    const path = this.escapeHtml(
-      request.originalUrl ?? request.url,
-    );
+    const path = this.escapeHtml(request.originalUrl ?? request.url);
 
     const safeCode = this.escapeHtml(code);
 
@@ -125,10 +110,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       request.headers['user-agent'] ?? 'unknown',
     );
 
-    const detailsText =
-      details !== undefined
-        ? this.safeJson(details)
-        : 'N/A';
+    const detailsText = details !== undefined ? this.safeJson(details) : 'N/A';
 
     const stackText = errorStack ?? 'No stack trace';
 

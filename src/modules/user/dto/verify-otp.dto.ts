@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsPhoneNumber, IsString, Matches } from 'class-validator';
 
 export class VerifyOtpDto {
   @ApiProperty({
@@ -14,5 +14,8 @@ export class VerifyOtpDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Matches(/^\d{6}$/, {
+    message: 'OTP kodi 6 xonali bo‘lishi kerak',
+  })
   code!: string;
 }

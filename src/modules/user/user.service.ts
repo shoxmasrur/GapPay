@@ -11,6 +11,9 @@ import { OtpService } from '../../infrastructure/otp/otp.service';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Crypt } from '../../infrastructure/lib/Crypt';
+import { File } from '../../infrastructure/lib/File';
+import type { Response } from 'express';
+import { Token } from '../../infrastructure/lib/Token';
 
 @Injectable()
 export class UserService {
@@ -25,6 +28,7 @@ export class UserService {
         id: true,
         fullName: true,
         phone: true,
+        avatar: true,
         role: true,
         createdAt: true,
         updatedAt: true,
@@ -44,6 +48,7 @@ export class UserService {
         id: true,
         fullName: true,
         phone: true,
+        avatar: true,
         role: true,
         createdAt: true,
       },
@@ -56,9 +61,9 @@ export class UserService {
     return successRes(user);
   }
 
-  async update(userId: number, dto: UserUpdateDto) {
+  async update(id: number, dto: UserUpdateDto, avatar?: Express.Multer.File) {
     const user = await this.db.user.findUnique({
-      where: { id: userId },
+      where: { id },
     });
 
     if (!user) {
@@ -75,23 +80,31 @@ export class UserService {
       }
     }
 
-    const updatedUser = await this.db.user.update({
-      where: { id: userId },
-      data: dto,
-      select: {
-        id: true,
-        fullName: true,
-        phone: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
+    let avatarUrl = user.avatar;
+
+    if (avatar) {
+      if (avatarUrl && (await File.exist(avatarUrl))) {
+        await File.delete(avatarUrl);
+      }
+
+      avatarUrl = await File.create(avatar);
+    }
+
+    const update = await this.db.user.update({
+      where: { id },
+      data: {
+        ...dto,
+        avatar: avatarUrl,
       },
+      omit: { password: true },
     });
 
-    return successRes(updatedUser);
+    return successRes({
+      data: update,
+    });
   }
 
-  async remove(id: number) {
+  async remove(id: number, currentUserId: number, res: Response) {
     const user = await this.db.user.findUnique({
       where: { id },
     });
@@ -100,9 +113,17 @@ export class UserService {
       throw new NotFoundException('Foydalanuvchi topilmadi');
     }
 
+    if (user.avatar && (await File.exist(user.avatar))) {
+      await File.delete(user.avatar);
+    }
+
     await this.db.user.delete({
       where: { id },
     });
+
+    if (currentUserId === id) {
+      Token.clearCookie(res);
+    }
 
     return successRes({
       message: 'Foydalanuvchi muvaffaqiyatli ochirildi',
@@ -114,13 +135,14 @@ export class UserService {
       where: { phone },
     });
 
-    if (!user) {
-      throw new NotFoundException(
-        'Bunday telefon raqamli foydalanuvchi topilmadi',
-      );
+    if (user) {
+      await this.otp.sendOtp(phone);
     }
 
-    return this.otp.sendOtp(phone);
+    return successRes({
+      message:
+        'Agar bu telefon raqam tizimda mavjud bo‘lsa, OTP kodi yuborildi',
+    });
   }
 
   async verifyOtp(dto: VerifyOtpDto) {
@@ -130,14 +152,18 @@ export class UserService {
   async resetPassword(dto: ResetPasswordDto) {
     const phone = await this.otp.getResetPhone(dto.resetToken);
 
-    if (phone !== dto.phone.replace(/\D/g, '')) {
-      throw new BadRequestException('Reset token noto‘g‘ri');
+    const normalizedPhone = dto.phone.replace(/\D/g, '');
+
+    if (phone !== normalizedPhone) {
+      throw new BadRequestException('Reset token notogri');
     }
 
     const hashedPassword = await Crypt.hash(dto.newPassword);
 
     await this.db.user.update({
-      where: { phone: dto.phone },
+      where: {
+        phone: normalizedPhone,
+      },
       data: {
         password: hashedPassword,
       },

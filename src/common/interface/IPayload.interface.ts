@@ -1,4 +1,7 @@
+import { Roles } from '../enum';
+
 export interface IPayload {
   sub: number;
-  role: string;
+  role: Roles;
+  deviceId: number
 }

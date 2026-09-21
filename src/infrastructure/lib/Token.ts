@@ -40,23 +40,38 @@ export class Token {
     accessToken: string,
     refreshToken?: string,
   ): void {
+    const isProduction = env.NODE_ENV === 'production';
+
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      secure: false,
+      secure: isProduction,
+      sameSite: 'lax',
       maxAge: parseInt(env.TOKEN.ACCESS_TIME) * 60 * 60 * 1000,
     });
 
     if (refreshToken) {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure: false,
+        secure: isProduction,
+        sameSite: 'lax',
         maxAge: parseInt(env.TOKEN.REFRESH_TIME) * 24 * 60 * 60 * 1000,
       });
     }
   }
 
-  static clearCookie(res: Response) {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+  static clearCookie(res: Response): void {
+    const isProduction = env.NODE_ENV === 'production';
+
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+    });
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+    });
   }
 }

@@ -4,7 +4,7 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { createHmac, randomInt } from 'crypto';
+import { createHmac, randomBytes, randomInt } from 'crypto';
 import { RedisService } from '../../config/redis/redis.service';
 import { env } from '../../config';
 
@@ -197,7 +197,7 @@ export class OtpService {
     if (result === 0) {
       throw new BadRequestException('OTP kodi notogri');
     }
-    const resetToken = randomInt(100000000, 1000000000).toString();
+    const resetToken = randomBytes(32).toString('hex');
 
     await redis.set(`otp:reset:${resetToken}`, phone, 'EX', 600);
 

@@ -1,9 +1,14 @@
 import 'dotenv/config';
 
 export const env = {
+  NODE_ENV: String(process.env.NODE_ENV),
+
   PORT: Number(process.env.PORT),
   DB_URL: String(process.env.DB_URL),
   REDIS_URL: String(process.env.REDIS_URL),
+
+  BASE_URL: String(process.env.BASE_URL),
+  FILE_PATH: String(process.env.FILE_PATH),
 
   SUPERADMIN: {
     PHONE: String(process.env.SUPERADMIN_PHONE),
