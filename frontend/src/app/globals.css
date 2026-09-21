@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: #f6f7f5;
+  --color-surface: #ffffff;
+  --color-ink: #16201b;
+  --color-muted: #5f6b65;
+  --color-line: #e3e7e4;
+
+  --color-brand: #0f7a55;
+  --color-brand-strong: #0b5e41;
+  --color-brand-soft: #e3f3ec;
+
+  /* Holat ranglari (TZ 5-bo'lim): doim yozuv bilan birga ishlatiladi */
+  --color-paid: #16794a;
+  --color-paid-soft: #e2f4ea;
+  --color-pending: #8a5a00;
+  --color-pending-soft: #fdf1d6;
+  --color-overdue: #b42318;
+  --color-overdue-soft: #fde7e5;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}

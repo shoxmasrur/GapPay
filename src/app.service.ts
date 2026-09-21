@@ -52,4 +52,8 @@ export class App {
       console.log(`Server running on port`, env.PORT),
     );
   }
+<<<<<<< HEAD
+} 
+=======
 }
+>>>>>>> 4cbea7ef1b2bea75f04b36a7ffec538e023697e3
