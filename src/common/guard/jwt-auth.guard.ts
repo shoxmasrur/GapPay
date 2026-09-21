@@ -13,17 +13,13 @@ export class AuthGuard implements CanActivate {
     const accessToken = req.cookies?.accessToken;
 
     if (!accessToken) {
-      throw new UnauthorizedException(
-        'Tizimga kirishda nosozlik',
-      );
+      throw new UnauthorizedException('Tizimga kirishda nosozlik');
     }
 
     const data = await Token.verifyToken(accessToken, 'access');
 
     if (!data) {
-      throw new UnauthorizedException(
-        'Tizimga kirishda nosozlik',
-      );
+      throw new UnauthorizedException('Tizimga kirishda nosozlik');
     }
 
     req.user = {
