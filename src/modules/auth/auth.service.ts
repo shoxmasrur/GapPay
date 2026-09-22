@@ -71,9 +71,7 @@ export class AuthService {
     });
 
     if (deviceCount >= 2) {
-      throw new BadRequestException(
-        'Qurulmalar soni ikktadan ochmasligi kerak',
-      );
+      throw new BadRequestException('Qurulmalar soni ikktadan ochmasligi kerak');
     }
 
     const { client, os } = getDeviceInfo(req);
@@ -93,29 +91,21 @@ export class AuthService {
       deviceId: device.id,
     };
 
-    const { accessToken, refreshToken } =
-      await Token.getToken(payload);
+    const { accessToken, refreshToken } = await Token.getToken(payload);
 
-    const hashedRefreshToken =
-      await Crypt.hash(refreshToken);
+    const hashedRefreshToken = await Crypt.hash(refreshToken);
 
-    await this.db.device.update({
-      where: { id: device.id },
-      data: { hashedRefreshToken },
-    });
+    await this.db.device.update({ where: { id: device.id }, data: { hashedRefreshToken } });
 
     Token.setCookie(res, accessToken, refreshToken);
 
-    return successRes(
-      {
+    return successRes({
         id: user.id,
         fullName: user.fullName,
         phone: user.phone,
         role: user.role,
         deviceId: device.id,
-      },
-      201,
-    );
+      },201);
   }
 
   async refreshToken(refreshToken: string, res: Response) {
@@ -215,7 +205,7 @@ export class AuthService {
         password: hashedPassword,
       },
     });
-
+  
     await this.otp.deleteResetToken(dto.resetToken);
 
     return successRes({
