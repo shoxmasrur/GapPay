@@ -399,7 +399,10 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Device: 'Device',
-  Gap: 'Gap'
+  Gap: 'Gap',
+  GapMember: 'GapMember',
+  Round: 'Round',
+  Payment: 'Payment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "device" | "gap"
+    modelProps: "user" | "device" | "gap" | "gapMember" | "round" | "payment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -641,6 +644,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GapMember: {
+      payload: Prisma.$GapMemberPayload<ExtArgs>
+      fields: Prisma.GapMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GapMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GapMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.GapMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GapMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>
+        }
+        findMany: {
+          args: Prisma.GapMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>[]
+        }
+        create: {
+          args: Prisma.GapMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>
+        }
+        createMany: {
+          args: Prisma.GapMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GapMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.GapMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>
+        }
+        update: {
+          args: Prisma.GapMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.GapMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GapMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GapMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.GapMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GapMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.GapMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGapMember>
+        }
+        groupBy: {
+          args: Prisma.GapMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GapMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GapMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GapMemberCountAggregateOutputType> | number
+        }
+      }
+    }
+    Round: {
+      payload: Prisma.$RoundPayload<ExtArgs>
+      fields: Prisma.RoundFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RoundFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RoundFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>
+        }
+        findFirst: {
+          args: Prisma.RoundFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RoundFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>
+        }
+        findMany: {
+          args: Prisma.RoundFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>[]
+        }
+        create: {
+          args: Prisma.RoundCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>
+        }
+        createMany: {
+          args: Prisma.RoundCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RoundCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>[]
+        }
+        delete: {
+          args: Prisma.RoundDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>
+        }
+        update: {
+          args: Prisma.RoundUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>
+        }
+        deleteMany: {
+          args: Prisma.RoundDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RoundUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RoundUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>[]
+        }
+        upsert: {
+          args: Prisma.RoundUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoundPayload>
+        }
+        aggregate: {
+          args: Prisma.RoundAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRound>
+        }
+        groupBy: {
+          args: Prisma.RoundGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoundGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RoundCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoundCountAggregateOutputType> | number
+        }
+      }
+    }
+    Payment: {
+      payload: Prisma.$PaymentPayload<ExtArgs>
+      fields: Prisma.PaymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        update: {
+          args: Prisma.PaymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePayment>
+        }
+        groupBy: {
+          args: Prisma.PaymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -713,11 +938,51 @@ export const GapScalarFieldEnum = {
   description: 'description',
   organizerId: 'organizerId',
   maxMembers: 'maxMembers',
+  monthlyAmount: 'monthlyAmount',
+  duration: 'duration',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type GapScalarFieldEnum = (typeof GapScalarFieldEnum)[keyof typeof GapScalarFieldEnum]
+
+
+export const GapMemberScalarFieldEnum = {
+  id: 'id',
+  gapId: 'gapId',
+  userId: 'userId',
+  joinAt: 'joinAt'
+} as const
+
+export type GapMemberScalarFieldEnum = (typeof GapMemberScalarFieldEnum)[keyof typeof GapMemberScalarFieldEnum]
+
+
+export const RoundScalarFieldEnum = {
+  id: 'id',
+  gapId: 'gapId',
+  roundNumber: 'roundNumber',
+  receiverId: 'receiverId',
+  status: 'status',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RoundScalarFieldEnum = (typeof RoundScalarFieldEnum)[keyof typeof RoundScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  roundId: 'roundId',
+  userId: 'userId',
+  amount: 'amount',
+  status: 'status',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -817,6 +1082,48 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'GapStatus'
+ */
+export type EnumGapStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GapStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'GapStatus[]'
+ */
+export type ListEnumGapStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GapStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RoundStatus'
+ */
+export type EnumRoundStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RoundStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'RoundStatus[]'
+ */
+export type ListEnumRoundStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RoundStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentStatus'
+ */
+export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentStatus[]'
+ */
+export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
     
 
 
@@ -987,6 +1294,9 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   device?: Prisma.DeviceOmit
   gap?: Prisma.GapOmit
+  gapMember?: Prisma.GapMemberOmit
+  round?: Prisma.RoundOmit
+  payment?: Prisma.PaymentOmit
 }
 
 /* Types for Logging */

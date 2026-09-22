@@ -32,3 +32,18 @@ export type Device = Prisma.DeviceModel
  * 
  */
 export type Gap = Prisma.GapModel
+/**
+ * Model GapMember
+ * 
+ */
+export type GapMember = Prisma.GapMemberModel
+/**
+ * Model Round
+ * 
+ */
+export type Round = Prisma.RoundModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel

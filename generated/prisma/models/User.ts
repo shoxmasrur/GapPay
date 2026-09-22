@@ -250,6 +250,9 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdGaps?: Prisma.GapListRelationFilter
   devices?: Prisma.DeviceListRelationFilter
+  gapMembers?: Prisma.GapMemberListRelationFilter
+  roundsReceived?: Prisma.RoundListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -264,6 +267,9 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   createdGaps?: Prisma.GapOrderByRelationAggregateInput
   devices?: Prisma.DeviceOrderByRelationAggregateInput
+  gapMembers?: Prisma.GapMemberOrderByRelationAggregateInput
+  roundsReceived?: Prisma.RoundOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -281,6 +287,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdGaps?: Prisma.GapListRelationFilter
   devices?: Prisma.DeviceListRelationFilter
+  gapMembers?: Prisma.GapMemberListRelationFilter
+  roundsReceived?: Prisma.RoundListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }, "id" | "phone">
 
 export type UserOrderByWithAggregationInput = {
@@ -326,6 +335,9 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   createdGaps?: Prisma.GapCreateNestedManyWithoutOrganizerInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -340,6 +352,9 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   createdGaps?: Prisma.GapUncheckedCreateNestedManyWithoutOrganizerInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberUncheckedCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundUncheckedCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -353,6 +368,9 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdGaps?: Prisma.GapUpdateManyWithoutOrganizerNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -367,6 +385,9 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdGaps?: Prisma.GapUncheckedUpdateManyWithoutOrganizerNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUncheckedUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUncheckedUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -509,6 +530,48 @@ export type UserUpdateOneRequiredWithoutCreatedGapsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedGapsInput, Prisma.UserUpdateWithoutCreatedGapsInput>, Prisma.UserUncheckedUpdateWithoutCreatedGapsInput>
 }
 
+export type UserCreateNestedOneWithoutGapMembersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGapMembersInput, Prisma.UserUncheckedCreateWithoutGapMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGapMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGapMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGapMembersInput, Prisma.UserUncheckedCreateWithoutGapMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGapMembersInput
+  upsert?: Prisma.UserUpsertWithoutGapMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGapMembersInput, Prisma.UserUpdateWithoutGapMembersInput>, Prisma.UserUncheckedUpdateWithoutGapMembersInput>
+}
+
+export type UserCreateNestedOneWithoutRoundsReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRoundsReceivedInput, Prisma.UserUncheckedCreateWithoutRoundsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRoundsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRoundsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRoundsReceivedInput, Prisma.UserUncheckedCreateWithoutRoundsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRoundsReceivedInput
+  upsert?: Prisma.UserUpsertWithoutRoundsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRoundsReceivedInput, Prisma.UserUpdateWithoutRoundsReceivedInput>, Prisma.UserUncheckedUpdateWithoutRoundsReceivedInput>
+}
+
+export type UserCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentsInput, Prisma.UserUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentsInput, Prisma.UserUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.UserUpsertWithoutPaymentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPaymentsInput, Prisma.UserUpdateWithoutPaymentsInput>, Prisma.UserUncheckedUpdateWithoutPaymentsInput>
+}
+
 export type UserCreateWithoutDevicesInput = {
   fullName: string
   phone: string
@@ -519,6 +582,9 @@ export type UserCreateWithoutDevicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdGaps?: Prisma.GapCreateNestedManyWithoutOrganizerInput
+  gapMembers?: Prisma.GapMemberCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDevicesInput = {
@@ -532,6 +598,9 @@ export type UserUncheckedCreateWithoutDevicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdGaps?: Prisma.GapUncheckedCreateNestedManyWithoutOrganizerInput
+  gapMembers?: Prisma.GapMemberUncheckedCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundUncheckedCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDevicesInput = {
@@ -560,6 +629,9 @@ export type UserUpdateWithoutDevicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdGaps?: Prisma.GapUpdateManyWithoutOrganizerNestedInput
+  gapMembers?: Prisma.GapMemberUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDevicesInput = {
@@ -573,6 +645,9 @@ export type UserUncheckedUpdateWithoutDevicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdGaps?: Prisma.GapUncheckedUpdateManyWithoutOrganizerNestedInput
+  gapMembers?: Prisma.GapMemberUncheckedUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUncheckedUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedGapsInput = {
@@ -585,6 +660,9 @@ export type UserCreateWithoutCreatedGapsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedGapsInput = {
@@ -598,6 +676,9 @@ export type UserUncheckedCreateWithoutCreatedGapsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberUncheckedCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundUncheckedCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedGapsInput = {
@@ -626,6 +707,9 @@ export type UserUpdateWithoutCreatedGapsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedGapsInput = {
@@ -639,6 +723,243 @@ export type UserUncheckedUpdateWithoutCreatedGapsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUncheckedUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUncheckedUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutGapMembersInput = {
+  fullName: string
+  phone: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.Status
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdGaps?: Prisma.GapCreateNestedManyWithoutOrganizerInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutGapMembersInput = {
+  id?: number
+  fullName: string
+  phone: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.Status
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdGaps?: Prisma.GapUncheckedCreateNestedManyWithoutOrganizerInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundUncheckedCreateNestedManyWithoutReceiverInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutGapMembersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGapMembersInput, Prisma.UserUncheckedCreateWithoutGapMembersInput>
+}
+
+export type UserUpsertWithoutGapMembersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGapMembersInput, Prisma.UserUncheckedUpdateWithoutGapMembersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGapMembersInput, Prisma.UserUncheckedCreateWithoutGapMembersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGapMembersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGapMembersInput, Prisma.UserUncheckedUpdateWithoutGapMembersInput>
+}
+
+export type UserUpdateWithoutGapMembersInput = {
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdGaps?: Prisma.GapUpdateManyWithoutOrganizerNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGapMembersInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdGaps?: Prisma.GapUncheckedUpdateManyWithoutOrganizerNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUncheckedUpdateManyWithoutReceiverNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutRoundsReceivedInput = {
+  fullName: string
+  phone: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.Status
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdGaps?: Prisma.GapCreateNestedManyWithoutOrganizerInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRoundsReceivedInput = {
+  id?: number
+  fullName: string
+  phone: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.Status
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdGaps?: Prisma.GapUncheckedCreateNestedManyWithoutOrganizerInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRoundsReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRoundsReceivedInput, Prisma.UserUncheckedCreateWithoutRoundsReceivedInput>
+}
+
+export type UserUpsertWithoutRoundsReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRoundsReceivedInput, Prisma.UserUncheckedUpdateWithoutRoundsReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRoundsReceivedInput, Prisma.UserUncheckedCreateWithoutRoundsReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRoundsReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRoundsReceivedInput, Prisma.UserUncheckedUpdateWithoutRoundsReceivedInput>
+}
+
+export type UserUpdateWithoutRoundsReceivedInput = {
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdGaps?: Prisma.GapUpdateManyWithoutOrganizerNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRoundsReceivedInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdGaps?: Prisma.GapUncheckedUpdateManyWithoutOrganizerNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPaymentsInput = {
+  fullName: string
+  phone: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.Status
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdGaps?: Prisma.GapCreateNestedManyWithoutOrganizerInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutPaymentsInput = {
+  id?: number
+  fullName: string
+  phone: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.Status
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdGaps?: Prisma.GapUncheckedCreateNestedManyWithoutOrganizerInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  gapMembers?: Prisma.GapMemberUncheckedCreateNestedManyWithoutUserInput
+  roundsReceived?: Prisma.RoundUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentsInput, Prisma.UserUncheckedCreateWithoutPaymentsInput>
+}
+
+export type UserUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPaymentsInput, Prisma.UserUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentsInput, Prisma.UserUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPaymentsInput, Prisma.UserUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type UserUpdateWithoutPaymentsInput = {
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdGaps?: Prisma.GapUpdateManyWithoutOrganizerNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdGaps?: Prisma.GapUncheckedUpdateManyWithoutOrganizerNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  gapMembers?: Prisma.GapMemberUncheckedUpdateManyWithoutUserNestedInput
+  roundsReceived?: Prisma.RoundUncheckedUpdateManyWithoutReceiverNestedInput
 }
 
 
@@ -649,11 +970,17 @@ export type UserUncheckedUpdateWithoutCreatedGapsInput = {
 export type UserCountOutputType = {
   createdGaps: number
   devices: number
+  gapMembers: number
+  roundsReceived: number
+  payments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdGaps?: boolean | UserCountOutputTypeCountCreatedGapsArgs
   devices?: boolean | UserCountOutputTypeCountDevicesArgs
+  gapMembers?: boolean | UserCountOutputTypeCountGapMembersArgs
+  roundsReceived?: boolean | UserCountOutputTypeCountRoundsReceivedArgs
+  payments?: boolean | UserCountOutputTypeCountPaymentsArgs
 }
 
 /**
@@ -680,6 +1007,27 @@ export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.DeviceWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGapMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GapMemberWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRoundsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoundWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -693,6 +1041,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   createdGaps?: boolean | Prisma.User$createdGapsArgs<ExtArgs>
   devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
+  gapMembers?: boolean | Prisma.User$gapMembersArgs<ExtArgs>
+  roundsReceived?: boolean | Prisma.User$roundsReceivedArgs<ExtArgs>
+  payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -736,6 +1087,9 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdGaps?: boolean | Prisma.User$createdGapsArgs<ExtArgs>
   devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
+  gapMembers?: boolean | Prisma.User$gapMembersArgs<ExtArgs>
+  roundsReceived?: boolean | Prisma.User$roundsReceivedArgs<ExtArgs>
+  payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -746,6 +1100,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     createdGaps: Prisma.$GapPayload<ExtArgs>[]
     devices: Prisma.$DevicePayload<ExtArgs>[]
+    gapMembers: Prisma.$GapMemberPayload<ExtArgs>[]
+    roundsReceived: Prisma.$RoundPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1153,6 +1510,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   createdGaps<T extends Prisma.User$createdGapsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdGapsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   devices<T extends Prisma.User$devicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gapMembers<T extends Prisma.User$gapMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gapMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GapMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roundsReceived<T extends Prisma.User$roundsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$roundsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1629,6 +1989,78 @@ export type User$devicesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.DeviceScalarFieldEnum | Prisma.DeviceScalarFieldEnum[]
+}
+
+/**
+ * User.gapMembers
+ */
+export type User$gapMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GapMember
+   */
+  select?: Prisma.GapMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GapMember
+   */
+  omit?: Prisma.GapMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GapMemberInclude<ExtArgs> | null
+  where?: Prisma.GapMemberWhereInput
+  orderBy?: Prisma.GapMemberOrderByWithRelationInput | Prisma.GapMemberOrderByWithRelationInput[]
+  cursor?: Prisma.GapMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GapMemberScalarFieldEnum | Prisma.GapMemberScalarFieldEnum[]
+}
+
+/**
+ * User.roundsReceived
+ */
+export type User$roundsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Round
+   */
+  select?: Prisma.RoundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Round
+   */
+  omit?: Prisma.RoundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoundInclude<ExtArgs> | null
+  where?: Prisma.RoundWhereInput
+  orderBy?: Prisma.RoundOrderByWithRelationInput | Prisma.RoundOrderByWithRelationInput[]
+  cursor?: Prisma.RoundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoundScalarFieldEnum | Prisma.RoundScalarFieldEnum[]
+}
+
+/**
+ * User.payments
+ */
+export type User$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
 }
 
 /**

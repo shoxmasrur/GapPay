@@ -53,7 +53,10 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Device: 'Device',
-  Gap: 'Gap'
+  Gap: 'Gap',
+  GapMember: 'GapMember',
+  Round: 'Round',
+  Payment: 'Payment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -105,11 +108,51 @@ export const GapScalarFieldEnum = {
   description: 'description',
   organizerId: 'organizerId',
   maxMembers: 'maxMembers',
+  monthlyAmount: 'monthlyAmount',
+  duration: 'duration',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type GapScalarFieldEnum = (typeof GapScalarFieldEnum)[keyof typeof GapScalarFieldEnum]
+
+
+export const GapMemberScalarFieldEnum = {
+  id: 'id',
+  gapId: 'gapId',
+  userId: 'userId',
+  joinAt: 'joinAt'
+} as const
+
+export type GapMemberScalarFieldEnum = (typeof GapMemberScalarFieldEnum)[keyof typeof GapMemberScalarFieldEnum]
+
+
+export const RoundScalarFieldEnum = {
+  id: 'id',
+  gapId: 'gapId',
+  roundNumber: 'roundNumber',
+  receiverId: 'receiverId',
+  status: 'status',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RoundScalarFieldEnum = (typeof RoundScalarFieldEnum)[keyof typeof RoundScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  roundId: 'roundId',
+  userId: 'userId',
+  amount: 'amount',
+  status: 'status',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
 export const SortOrder = {

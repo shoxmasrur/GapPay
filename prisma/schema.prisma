@@ -17,18 +17,39 @@ enum Status {
   INACTIVE
 }
 
+enum GapStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum RoundStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+}
+
 model User {
-  id          Int      @id @default(autoincrement())
-  fullName    String
-  phone       String   @unique
-  password    String
-  role        Role     @default(USER)
-  status      Status   @default(ACTIVE)
-  avatar      String?
-  createdGaps Gap[]
-  devices     Device[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             Int         @id @default(autoincrement())
+  fullName       String
+  phone          String      @unique
+  password       String
+  role           Role        @default(USER)
+  status         Status      @default(ACTIVE)
+  avatar         String?
+  createdGaps    Gap[]
+  devices        Device[]
+  gapMembers     GapMember[]
+  roundsReceived Round[]
+  payments       Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Device {
@@ -42,13 +63,66 @@ model Device {
 }
 
 model Gap {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  organizerId Int
-  maxMembers  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int       @id @default(autoincrement())
+  name          String
+  description   String?
+  organizerId   Int
+  maxMembers    Int
+  monthlyAmount Int
+  duration      Int
+  status        GapStatus @default(ACTIVE)
 
-  organizer User @relation(fields: [organizerId], references: [id])
+  organizer User        @relation(fields: [organizerId], references: [id])
+  members   GapMember[]
+  rounds    Round[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GapMember {
+  id     Int @id @default(autoincrement())
+  gapId  Int
+  userId Int
+
+  gap    Gap      @relation(fields: [gapId], references: [id], onDelete: Cascade)
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinAt DateTime @default(now())
+
+  @@unique([gapId, userId])
+}
+
+model Round {
+  id          Int         @id @default(autoincrement())
+  gapId       Int
+  roundNumber Int
+  receiverId  Int
+  status      RoundStatus @default(PENDING)
+
+  gap      Gap       @relation(fields: [gapId], references: [id], onDelete: Cascade)
+  receiver User      @relation(fields: [receiverId], references: [id])
+  payments Payment[]
+
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([gapId, roundNumber])
+}
+
+model Payment {
+  id      Int           @id @default(autoincrement())
+  roundId Int
+  userId  Int
+  amount  Int
+  status  PaymentStatus @default(PENDING)
+
+  round Round @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id])
+
+  paidAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@unique([roundId, userId])
 }
