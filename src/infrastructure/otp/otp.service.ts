@@ -10,7 +10,7 @@ import { env } from '../../config';
 
 @Injectable()
 export class OtpService {
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService) { }
 
   private normalizePhone(value: string): string {
     const phone = value.replace(/\D/g, '');
@@ -21,9 +21,8 @@ export class OtpService {
       );
     }
 
-    return phone;
+    return `+${phone}`;
   }
-
   async getResetPhone(resetToken: string) {
     const phone = await this.redisService.client.get(`otp:reset:${resetToken}`);
 

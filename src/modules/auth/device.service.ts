@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-
+import {BadRequestException,Injectable,NotFoundException} from '@nestjs/common';
 import { successRes } from '../../common/helper/success-response';
 import { Token } from '../../infrastructure/lib/Token';
 import { PrismaService } from '../../config/prisma/prisma.service';
@@ -25,47 +20,28 @@ export class DeviceService {
     return successRes(devices);
   }
 
-  async remove(
-    userId: number,
-    refreshToken: string,
-    id: number,
-  ) {
-    const verifiedData = await Token.verifyToken(
-      refreshToken,
-      'refresh',
-    );
+  async remove(userId: number,refreshToken: string,id: number,) {
+
+    const verifiedData = await Token.verifyToken(refreshToken,'refresh');
 
     const iatDate = new Date(verifiedData.iat * 1000);
-    const diffInMinutes = Math.floor(
-      (Date.now() - iatDate.getTime()) / (1000 * 60),
-    );
+    const diffInMinutes = Math.floor((Date.now() - iatDate.getTime()) / (1000 * 60));
 
-    if (diffInMinutes < 1440) {
-      throw new BadRequestException(
-        "Eski qurilmani o'chirish uchun 24 soat talab etiladi",
-      );
+    if (diffInMinutes < 1) {
+      throw new BadRequestException("Eski qurilmani o'chirish uchun 24 soat talab etiladi");
     }
 
     if (verifiedData.deviceId === id) {
-      throw new BadRequestException(
-        "Joriy qurilmani o'chirib bo'lmaydi",
-      );
+      throw new BadRequestException("Joriy qurilmani o'chirib bo'lmaydi");
     }
 
-    const device = await this.db.device.findFirst({
-      where: {
-        id,
-        userId,
-      },
-    });
+    const device = await this.db.device.findFirst({where: {id,userId}});
 
     if (!device) {
       throw new NotFoundException('Qurilma topilmadi');
     }
 
-    await this.db.device.delete({
-      where: { id },
-    });
+    await this.db.device.delete({where: { id }});
 
     return successRes({});
   }

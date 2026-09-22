@@ -44,3 +44,13 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Device
+ * 
+ */
+export type Device = Prisma.DeviceModel
+/**
+ * Model Gap
+ * 
+ */
+export type Gap = Prisma.GapModel

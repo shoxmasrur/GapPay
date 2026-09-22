@@ -51,7 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Device: 'Device',
+  Gap: 'Gap'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -76,11 +78,38 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   password: 'password',
   role: 'role',
+  status: 'status',
+  avatar: 'avatar',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DeviceScalarFieldEnum = {
+  id: 'id',
+  device: 'device',
+  hashedRefreshToken: 'hashedRefreshToken',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum]
+
+
+export const GapScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  organizerId: 'organizerId',
+  maxMembers: 'maxMembers',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GapScalarFieldEnum = (typeof GapScalarFieldEnum)[keyof typeof GapScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -97,4 +126,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

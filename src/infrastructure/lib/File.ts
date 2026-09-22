@@ -19,9 +19,7 @@ export class File {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
       if (!detectedType || !allowedTypes.includes(detectedType.mime)) {
-        throw new BadRequestException(
-          'Fayl formati noto‘g‘ri. Faqat JPG, PNG yoki WebP rasmlarga ruxsat beriladi',
-        );
+        throw new BadRequestException('Fayl formati notogri');
       }
 
       const extensionMap: Record<string, string> = {
@@ -40,7 +38,6 @@ export class File {
             rej(err);
             return;
           }
-
           res();
         });
       });

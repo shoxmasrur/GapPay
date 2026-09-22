@@ -8,9 +8,6 @@ import { PrismaService } from '../../config/prisma/prisma.service';
 import { successRes } from '../../common/helper/success-response';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { OtpService } from '../../infrastructure/otp/otp.service';
-import { VerifyOtpDto } from './dto/verify-otp.dto';
-import { ResetPasswordDto } from './dto/reset-password.dto';
-import { Crypt } from '../../infrastructure/lib/Crypt';
 import { File } from '../../infrastructure/lib/File';
 import type { Response } from 'express';
 import { Token } from '../../infrastructure/lib/Token';
@@ -19,8 +16,7 @@ import { Token } from '../../infrastructure/lib/Token';
 export class UserService {
   constructor(
     private readonly db: PrismaService,
-    private readonly otp: OtpService,
-  ) {}
+  ) { }
 
   async findAll() {
     const users = await this.db.user.findMany({
@@ -129,50 +125,5 @@ export class UserService {
       message: 'Foydalanuvchi muvaffaqiyatli ochirildi',
     });
   }
-
-  async forgotPassword(phone: string) {
-    const user = await this.db.user.findUnique({
-      where: { phone },
-    });
-
-    if (user) {
-      await this.otp.sendOtp(phone);
-    }
-
-    return successRes({
-      message:
-        'Agar bu telefon raqam tizimda mavjud bo‘lsa, OTP kodi yuborildi',
-    });
-  }
-
-  async verifyOtp(dto: VerifyOtpDto) {
-    return this.otp.verifyOtp(dto.phone, dto.code);
-  }
-
-  async resetPassword(dto: ResetPasswordDto) {
-    const phone = await this.otp.getResetPhone(dto.resetToken);
-
-    const normalizedPhone = dto.phone.replace(/\D/g, '');
-
-    if (phone !== normalizedPhone) {
-      throw new BadRequestException('Reset token notogri');
-    }
-
-    const hashedPassword = await Crypt.hash(dto.newPassword);
-
-    await this.db.user.update({
-      where: {
-        phone: normalizedPhone,
-      },
-      data: {
-        password: hashedPassword,
-      },
-    });
-
-    await this.otp.deleteResetToken(dto.resetToken);
-
-    return successRes({
-      message: 'Parol muvaffaqiyatli yangilandi',
-    });
-  }
 }
+ 
