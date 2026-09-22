@@ -23,27 +23,26 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import type { Request, Response } from 'express';
 import { UserId } from '../../common/decorator/current-user.decorator';
 import { FILE_OPTIONS } from '../../infrastructure/lib/File';
+import { UpdateStatusDto } from './dto/update-status.dto';
 
 @Controller('user')
+@UseGuards(AuthGuard, RolesGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get(':id')
-  @UseGuards(AuthGuard, RolesGuard)
   @AccessRoles('ID')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
   @Get()
-  @UseGuards(AuthGuard, RolesGuard)
   @AccessRoles(Roles.SUPER_ADMIN)
   findAll() {
     return this.userService.findAll();
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard, RolesGuard)
   @AccessRoles('ID')
   @UseInterceptors(FileInterceptor('file', FILE_OPTIONS))
   async update(
@@ -55,7 +54,6 @@ export class UserController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard, RolesGuard)
   @AccessRoles('ID')
   remove(
     @Param('id', ParseIntPipe) id: number,
@@ -63,6 +61,16 @@ export class UserController {
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.userService.remove(id, currentUserId, res);
+  }
+
+
+  @Patch(':id/status')
+  @AccessRoles(Roles.SUPER_ADMIN)
+  updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateStatusDto,
+  ) {
+    return this.userService.updateStatus(id, dto.status);
   }
 
 }

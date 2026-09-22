@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import { PrismaService } from '../../config/prisma/prisma.service';
 import { successRes } from '../../common/helper/success-response';
 import { UserUpdateDto } from './dto/user-update.dto';
@@ -11,6 +6,7 @@ import { OtpService } from '../../infrastructure/otp/otp.service';
 import { File } from '../../infrastructure/lib/File';
 import type { Response } from 'express';
 import { Token } from '../../infrastructure/lib/Token';
+import { Status } from '../../../generated/prisma/enums';
 
 @Injectable()
 export class UserService {
@@ -125,5 +121,29 @@ export class UserService {
       message: 'Foydalanuvchi muvaffaqiyatli ochirildi',
     });
   }
+
+  async updateStatus(id: number, status: Status) {
+  const user = await this.db.user.findUnique({
+    where: { id },
+  });
+
+  if (!user) {
+    throw new NotFoundException('Foydalanuvchi topilmadi');
+  }
+
+  const updatedUser = await this.db.user.update({
+    where: { id },
+    data: { status },
+    select: {
+      id: true,
+      fullName: true,
+      phone: true,
+      role: true,
+      status: true,
+    },
+  });
+
+  return successRes(updatedUser);
+}
 }
  
