@@ -12,7 +12,7 @@ import { UpdateGapDto } from './dto/update-gap.dto';
 
 @Injectable()
 export class GapService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private readonly db: PrismaService) { }
 
   async create(userId: number, dto: CreateGapDto) {
     const { name, description, maxMembers, monthlyAmount } = dto;
@@ -129,7 +129,8 @@ export class GapService {
 
   async findAll(userId: number, role: Roles) {
     const gaps = await this.db.gap.findMany({
-      where: role === Roles.SUPER_ADMIN ? {} : { members: { some: { userId } } },
+      where:
+        role === Roles.SUPER_ADMIN ? {} : { members: { some: { userId } } },
       include: {
         members: {
           include: {
@@ -145,48 +146,173 @@ export class GapService {
         },
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'desc',
+      },
+    });
+
+    return successRes(gaps);
+  }
+
+  async update(userId: number, role: Roles, gapId: number, dto: UpdateGapDto) {
+    const gap = await this.db.gap.findUnique({ where: { id: gapId } })
+
+    if (!gap) {
+      throw new NotFoundException('Gap topilmadi')
+    }
+
+    if (role !== Roles.SUPER_ADMIN && gap.organizerId !== userId) {
+      throw new ForbiddenException('Faqat OWNER gapni yangilay oladi')
+    }
+
+    if (gap.status !== GapStatus.ACTIVE) {
+      throw new BadRequestException('Bu gapni yangilab bolmaydi')
+    }
+
+    const isStarted = gap.duration > 0;
+
+    if (
+      isStarted && (dto.maxMembers !== undefined || dto.monthlyAmount !== undefined)
+    ) {
+      throw new BadRequestException('Boshlangan gapda maxMembers va monthlyAmountni ozgartirib bolmaydi')
+    }
+
+    if (dto.maxMembers !== undefined && dto.maxMembers < 0) {
+      throw new BadRequestException('maxMemebers kamida 2 bolishi kerak')
+    }
+
+    if (dto.maxMembers !== undefined) {
+      const memberCount = await this.db.gapMember.count({
+        where: { gapId },
+      });
+
+      if (dto.maxMembers < memberCount) {
+        throw new BadRequestException('maxMembers mavjud azolar sonidan kam bolishi mumkin emas');
+      }
+    }
+
+    const updatedGap = await this.db.gap.update({
+      where: { id: gapId },
+      data: {
+        name: dto.name,
+        description: dto.description,
+        maxMembers: dto.maxMembers,
+        monthlyAmount: dto.monthlyAmount,
       }
     });
 
-    return successRes(gaps)
+    return successRes(updatedGap)
   }
 
   async findOne(userId: number, role: Roles, gapId: number) {
     const gap = await this.db.gap.findUnique({
-      where: {id: gapId}, include: {organizer: {
-        select: {
-          id: true,
-          fullName: true,
-          phone: true,
-          avatar: true
-        }
-      },members: {include: { user: {
-        select: {
-          id: true,
-          fullName: true,
-          phone: true,
-          avatar: true
-        }
-      }}}}
-    })
+      where: { id: gapId },
+      include: {
+        organizer: {
+          select: {
+            id: true,
+            fullName: true,
+            phone: true,
+            avatar: true,
+          },
+        },
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                phone: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    if(!gap) {
-      throw new NotFoundException('Gap topilmadi')
+    if (!gap) {
+      throw new NotFoundException('Gap topilmadi');
     }
 
-    if(role !== Roles.SUPER_ADMIN){
+    if (role !== Roles.SUPER_ADMIN) {
       const isMember = gap.members.some((memb) => memb.userId === userId);
 
       if (!isMember) {
-        throw new ForbiddenException('Bu gapni korishga ruxsat yoq')
+        throw new ForbiddenException('Bu gapni korishga ruxsat yoq');
       }
     }
 
-    return successRes(gap)
+    return successRes(gap);
   }
 
-  async update(userId: number, gapId: number, dto: UpdateGapDto) {
-    
+
+  async removeMember(currentUserId: number, role: Roles, gapId: number, memberId: number) {
+    const gap = await this.db.gap.findUnique({ where: { id: gapId } });
+
+    if (!gap) {
+      throw new NotFoundException('Gap topilmadi');
+    }
+
+    if (
+      role !== Roles.SUPER_ADMIN &&
+      gap.organizerId !== currentUserId
+    ) {
+      throw new ForbiddenException(
+        'Faqat OWNER yoki SUPER_ADMIN azo chiqara oladi',
+      );
+    }
+
+    if (gap.status !== GapStatus.ACTIVE) {
+      throw new BadRequestException('Bu gap faol emas');
+    }
+
+    if (gap.duration > 0) {
+      throw new BadRequestException('Boshlangan gapdan azo chiqarib bolmaydi');
+    }
+
+    if (gap.organizerId === memberId) {
+      throw new BadRequestException('OWNERni gapdan chiqarib bolmaydi');
+    }
+
+    const member = await this.db.gapMember.findUnique({
+      where: { gapId_userId: { gapId, userId: memberId } },
+    });
+
+    if (!member) {
+      throw new NotFoundException('Bu foydalanuvchi gap azo emas');
+    }
+
+    await this.db.gapMember.delete({
+      where: { id: member.id },
+    });
+
+    return successRes({ message: 'Azo gapdan chiqarildi' }, 200);
+  }
+
+  async remove(userId: number, role: Roles, gapId: number ) {
+    const gap = await this.db.gap.findUnique({ where: { id: gapId } });
+
+    if (!gap) {
+      throw new NotFoundException('Gap topilmadi');
+    }
+
+    if (
+      role !== Roles.SUPER_ADMIN &&
+      gap.organizerId !== userId
+    ) {
+      throw new ForbiddenException('Faqat OWNER yoki SUPER_ADMIN gapni ochira oladi');
+    }
+
+    if (gap.duration > 0) {
+      throw new BadRequestException('Boshlangan gapni ochirib bolmaydi');
+    }
+
+    if (gap.status !== GapStatus.ACTIVE) {
+      throw new BadRequestException('Bu gapni ochirib bolmaydi');
+    }
+
+    await this.db.gap.delete({ where: { id: gapId } });
+
+    return successRes({message: 'Gap ochirildi'},200);
   }
 }

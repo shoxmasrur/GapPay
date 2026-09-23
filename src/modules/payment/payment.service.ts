@@ -10,10 +10,10 @@ import { PrismaService } from '../../config/prisma/prisma.service';
 
 @Injectable()
 export class PaymentService {
-  constructor(private readonly prisma:PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(userId:number, dto: CreatePaymentDto) {
-    const { roundId,  amount } = dto;
+  async create(userId: number, dto: CreatePaymentDto) {
+    const { roundId, amount } = dto;
 
     const round = await this.prisma.round.findUnique({
       where: {
@@ -46,12 +46,9 @@ export class PaymentService {
     });
 
     if (!member) {
-      throw new BadRequestException(
-        'User ushbu Gap aʼzosi emas',
-      );
+      throw new BadRequestException('User ushbu Gap aʼzosi emas');
     }
 
-   
     const existingPayment = await this.prisma.payment.findUnique({
       where: {
         roundId_userId: {
@@ -68,9 +65,7 @@ export class PaymentService {
     }
 
     if (amount <= 0) {
-      throw new BadRequestException(
-        'Amount 0 dan katta bo‘lishi kerak',
-      );
+      throw new BadRequestException('Amount 0 dan katta bo‘lishi kerak');
     }
 
     return this.prisma.payment.create({
@@ -81,6 +76,4 @@ export class PaymentService {
       },
     });
   }
-
-
 }
