@@ -6,7 +6,6 @@ import {
 import { PrismaService } from '../../config/prisma/prisma.service';
 import { successRes } from '../../common/helper/success-response';
 import { UserUpdateDto } from './dto/user-update.dto';
-import { OtpService } from '../../infrastructure/otp/otp.service';
 import { File } from '../../infrastructure/lib/File';
 import type { Response } from 'express';
 import { Token } from '../../infrastructure/lib/Token';

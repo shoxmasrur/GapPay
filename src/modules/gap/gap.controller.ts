@@ -44,6 +44,15 @@ export class GapController {
         return this.gapService.startGap(userId, gapId);
     }
 
+    @Patch(':id/cancel')
+    cancel(
+        @UserId() userId: number,
+        @UserRole() role: Roles,
+        @Param('id', ParseIntPipe) gapId: number,
+    ) {
+        return this.gapService.cancel(userId, role, gapId);
+    }
+
     @Get()
     findAll(@UserId() userId: number, @UserRole() role: Roles) {
         return this.gapService.findAll(userId, role);

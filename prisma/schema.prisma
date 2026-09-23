@@ -34,13 +34,6 @@ enum PaymentStatus {
   PAID
 }
 
-enum ObligationStatus {
-  PENDING
-  PARTIAL
-  PAID
-  OVERDUE
-}
-
 model User {
   id             Int         @id @default(autoincrement())
   fullName       String
@@ -54,9 +47,8 @@ model User {
   gapMembers     GapMember[]
   roundsReceived Round[]
   payments       Payment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 model Device {
@@ -92,10 +84,9 @@ model GapMember {
   gapId  Int
   userId Int
 
-  obligations PaymentObligation[]
+  gap  Gap  @relation(fields: [gapId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  gap    Gap      @relation(fields: [gapId], references: [id], onDelete: Cascade)
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   joinAt DateTime @default(now())
 
   @@unique([gapId, userId])
@@ -108,15 +99,13 @@ model Round {
   receiverId  Int
   status      RoundStatus @default(PENDING)
 
-  gap         Gap                 @relation(fields: [gapId], references: [id], onDelete: Cascade)
-  receiver    User                @relation(fields: [receiverId], references: [id])
-  payments    Payment[]
-  obligations PaymentObligation[]
+  gap      Gap  @relation(fields: [gapId], references: [id], onDelete: Cascade)
+  receiver User @relation(fields: [receiverId], references: [id])
+  payments Payment[]
 
   startedAt   DateTime?
   completedAt DateTime?
-
-  createdAt DateTime @default(now())
+  createdAt   DateTime  @default(now())
 
   @@unique([gapId, roundNumber])
 }
@@ -128,34 +117,11 @@ model Payment {
   amount  Int
   status  PaymentStatus @default(PENDING)
 
-  obligationId String?
-  obligation   PaymentObligation? @relation(fields: [obligationId], references: [id])
-
   round Round @relation(fields: [roundId], references: [id], onDelete: Cascade)
   user  User  @relation(fields: [userId], references: [id])
 
   paidAt    DateTime?
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([roundId, userId])
-}
-
-model PaymentObligation {
-  id      String           @id @default(uuid())
-  amount  Decimal
-  dueDate DateTime?
-  status  ObligationStatus @default(PENDING)
-
-  memberId Int
-  member   GapMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  roundId  Int
-  round    Round     @relation(fields: [roundId], references: [id], onDelete: Cascade)
-
-  payments Payment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([roundId])
-  @@index([memberId])
 }

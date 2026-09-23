@@ -47,8 +47,3 @@ export type Round = Prisma.RoundModel
  * 
  */
 export type Payment = Prisma.PaymentModel
-/**
- * Model PaymentObligation
- * 
- */
-export type PaymentObligation = Prisma.PaymentObligationModel

@@ -127,6 +127,34 @@ export class GapService {
     return successRes(updateGap, 201);
   }
 
+  async cancel(userId: number, role: Roles, gapId: number) {
+    const gap = await this.db.gap.findUnique({ where: { id: gapId } });
+
+    if (!gap) {
+      throw new NotFoundException('Gap topilmadi');
+    }
+
+    if (role !== Roles.SUPER_ADMIN && gap.organizerId !== userId) {
+      throw new ForbiddenException('Faqat OWNER yoki SUPER_ADMIN gapni bekor qila oladi');
+    }
+
+    if (gap.status !== GapStatus.ACTIVE) {
+      throw new BadRequestException('Bu gapni bekor qilib bolmaydi');
+    }
+
+    if (gap.duration > 0) {
+      throw new BadRequestException('Boshlangan gapni bekor qilib bolmaydi');
+    }
+
+    const cancelledGap = await this.db.gap.update({
+      where: { id: gapId }, data: {
+        status: GapStatus.CANCELLED,
+      },
+    });
+
+    return successRes(cancelledGap, 200);
+  }
+
   async findAll(userId: number, role: Roles) {
     const gaps = await this.db.gap.findMany({
       where:
@@ -289,7 +317,7 @@ export class GapService {
     return successRes({ message: 'Azo gapdan chiqarildi' }, 200);
   }
 
-  async remove(userId: number, role: Roles, gapId: number ) {
+  async remove(userId: number, role: Roles, gapId: number) {
     const gap = await this.db.gap.findUnique({ where: { id: gapId } });
 
     if (!gap) {
@@ -313,6 +341,6 @@ export class GapService {
 
     await this.db.gap.delete({ where: { id: gapId } });
 
-    return successRes({message: 'Gap ochirildi'},200);
+    return successRes({ message: 'Gap ochirildi' }, 200);
   }
 }

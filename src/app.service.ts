@@ -43,6 +43,7 @@ export class App {
         .setTitle('Gap Platform API')
         .setDescription('Gap Platform backend API')
         .setVersion('1.0')
+        .addCookieAuth('accessToken')
         .build();
 
       const document = SwaggerModule.createDocument(app, config);

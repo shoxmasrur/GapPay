@@ -56,8 +56,7 @@ export const ModelName = {
   Gap: 'Gap',
   GapMember: 'GapMember',
   Round: 'Round',
-  Payment: 'Payment',
-  PaymentObligation: 'PaymentObligation'
+  Payment: 'Payment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -149,26 +148,11 @@ export const PaymentScalarFieldEnum = {
   userId: 'userId',
   amount: 'amount',
   status: 'status',
-  obligationId: 'obligationId',
   paidAt: 'paidAt',
   createdAt: 'createdAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
-
-
-export const PaymentObligationScalarFieldEnum = {
-  id: 'id',
-  amount: 'amount',
-  dueDate: 'dueDate',
-  status: 'status',
-  memberId: 'memberId',
-  roundId: 'roundId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PaymentObligationScalarFieldEnum = (typeof PaymentObligationScalarFieldEnum)[keyof typeof PaymentObligationScalarFieldEnum]
 
 
 export const SortOrder = {
