@@ -402,7 +402,8 @@ export const ModelName = {
   Gap: 'Gap',
   GapMember: 'GapMember',
   Round: 'Round',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  PaymentObligation: 'PaymentObligation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "device" | "gap" | "gapMember" | "round" | "payment"
+    modelProps: "user" | "device" | "gap" | "gapMember" | "round" | "payment" | "paymentObligation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -866,6 +867,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PaymentObligation: {
+      payload: Prisma.$PaymentObligationPayload<ExtArgs>
+      fields: Prisma.PaymentObligationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentObligationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentObligationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentObligationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentObligationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentObligationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentObligationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentObligationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentObligationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentObligationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>
+        }
+        update: {
+          args: Prisma.PaymentObligationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentObligationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentObligationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentObligationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentObligationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentObligationPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentObligationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentObligation>
+        }
+        groupBy: {
+          args: Prisma.PaymentObligationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentObligationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentObligationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentObligationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -978,11 +1053,26 @@ export const PaymentScalarFieldEnum = {
   userId: 'userId',
   amount: 'amount',
   status: 'status',
+  obligationId: 'obligationId',
   paidAt: 'paidAt',
   createdAt: 'createdAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentObligationScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  dueDate: 'dueDate',
+  status: 'status',
+  memberId: 'memberId',
+  roundId: 'roundId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentObligationScalarFieldEnum = (typeof PaymentObligationScalarFieldEnum)[keyof typeof PaymentObligationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1124,6 +1214,34 @@ export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'PaymentStatus[]'
  */
 export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ObligationStatus'
+ */
+export type EnumObligationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ObligationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ObligationStatus[]'
+ */
+export type ListEnumObligationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ObligationStatus[]'>
     
 
 
@@ -1297,6 +1415,7 @@ export type GlobalOmitConfig = {
   gapMember?: Prisma.GapMemberOmit
   round?: Prisma.RoundOmit
   payment?: Prisma.PaymentOmit
+  paymentObligation?: Prisma.PaymentObligationOmit
 }
 
 /* Types for Logging */

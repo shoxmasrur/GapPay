@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { GapModule } from './modules/gap/gap.module';
 import { RoundModule } from './modules/round/round.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { RoundModule } from './modules/round/round.module';
     UserModule,
     RedisModule,
     GapModule,
-    RoundModule
+    RoundModule,
+    PaymentModule,
   ],
   providers: [
     {

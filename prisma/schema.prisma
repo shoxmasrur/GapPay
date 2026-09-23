@@ -34,6 +34,13 @@ enum PaymentStatus {
   PAID
 }
 
+enum ObligationStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+}
+
 model User {
   id             Int         @id @default(autoincrement())
   fullName       String
@@ -85,6 +92,8 @@ model GapMember {
   gapId  Int
   userId Int
 
+  obligations PaymentObligation[]
+
   gap    Gap      @relation(fields: [gapId], references: [id], onDelete: Cascade)
   user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   joinAt DateTime @default(now())
@@ -99,9 +108,10 @@ model Round {
   receiverId  Int
   status      RoundStatus @default(PENDING)
 
-  gap      Gap       @relation(fields: [gapId], references: [id], onDelete: Cascade)
-  receiver User      @relation(fields: [receiverId], references: [id])
-  payments Payment[]
+  gap         Gap                 @relation(fields: [gapId], references: [id], onDelete: Cascade)
+  receiver    User                @relation(fields: [receiverId], references: [id])
+  payments    Payment[]
+  obligations PaymentObligation[]
 
   startedAt   DateTime?
   completedAt DateTime?
@@ -118,6 +128,9 @@ model Payment {
   amount  Int
   status  PaymentStatus @default(PENDING)
 
+  obligationId String?
+  obligation   PaymentObligation? @relation(fields: [obligationId], references: [id])
+
   round Round @relation(fields: [roundId], references: [id], onDelete: Cascade)
   user  User  @relation(fields: [userId], references: [id])
 
@@ -125,4 +138,24 @@ model Payment {
   createdAt DateTime  @default(now())
 
   @@unique([roundId, userId])
+}
+
+model PaymentObligation {
+  id      String           @id @default(uuid())
+  amount  Decimal
+  dueDate DateTime?
+  status  ObligationStatus @default(PENDING)
+
+  memberId Int
+  member   GapMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  roundId  Int
+  round    Round     @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([roundId])
+  @@index([memberId])
 }
