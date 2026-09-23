@@ -1,4 +1,8 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { PrismaService } from '../../config/prisma/prisma.service';
@@ -17,8 +21,7 @@ export class AuthService {
   constructor(
     private readonly db: PrismaService,
     private readonly otp: OtpService,
-
-  ) { }
+  ) {}
 
   async register(dto: RegisterDto) {
     const { fullName, phone, password } = dto;
@@ -71,7 +74,9 @@ export class AuthService {
     });
 
     if (deviceCount >= 2) {
-      throw new BadRequestException('Qurulmalar soni ikktadan ochmasligi kerak');
+      throw new BadRequestException(
+        'Qurulmalar soni ikktadan ochmasligi kerak',
+      );
     }
 
     const { client, os } = getDeviceInfo(req);
@@ -95,21 +100,26 @@ export class AuthService {
 
     const hashedRefreshToken = await Crypt.hash(refreshToken);
 
-    await this.db.device.update({ where: { id: device.id }, data: { hashedRefreshToken } });
+    await this.db.device.update({
+      where: { id: device.id },
+      data: { hashedRefreshToken },
+    });
 
     Token.setCookie(res, accessToken, refreshToken);
 
-    return successRes({
+    return successRes(
+      {
         id: user.id,
         fullName: user.fullName,
         phone: user.phone,
         role: user.role,
         deviceId: device.id,
-      },201);
+      },
+      201,
+    );
   }
 
   async refreshToken(refreshToken: string, res: Response) {
-
     const verifiedData = await Token.verifyToken(refreshToken, 'refresh');
 
     const device = await this.db.device.findFirst({
@@ -132,7 +142,10 @@ export class AuthService {
       throw new BadRequestException('Foydalanuvchi faol emas');
     }
 
-    const isMatchToken = await Crypt.compare(refreshToken, device.hashedRefreshToken);
+    const isMatchToken = await Crypt.compare(
+      refreshToken,
+      device.hashedRefreshToken,
+    );
 
     if (!isMatchToken) {
       throw new BadRequestException("Qurilma tizimda ro'yxatdan o'tmagan");
@@ -141,19 +154,22 @@ export class AuthService {
     delete verifiedData.iat;
     delete verifiedData.exp;
 
-    const { accessToken } = await Token.getToken(verifiedData,);
+    const { accessToken } = await Token.getToken(verifiedData);
 
     Token.setCookie(res, accessToken);
 
-    return successRes({
-      userId: device.userId,
-      deviceId: device.id,
-      device: device.device,
-      createdAt: device.createdAt,
-    }, 201);
+    return successRes(
+      {
+        userId: device.userId,
+        deviceId: device.id,
+        device: device.device,
+        createdAt: device.createdAt,
+      },
+      201,
+    );
   }
 
-  async logout(refreshToken: string, res: Response,) {
+  async logout(refreshToken: string, res: Response) {
     const verifiedData = await Token.verifyToken(refreshToken, 'refresh');
 
     await this.db.device.deleteMany({
@@ -165,16 +181,13 @@ export class AuthService {
     return successRes({}, 201);
   }
 
-
   async forgotPassword(phone: string) {
     const user = await this.db.user.findUnique({
       where: { phone },
     });
 
     if (!user) {
-      throw new BadRequestException(
-        'Telefon raqam xato',
-      );
+      throw new BadRequestException('Telefon raqam xato');
     }
 
     const data = await this.otp.sendOtp(user.phone);
@@ -205,12 +218,14 @@ export class AuthService {
         password: hashedPassword,
       },
     });
-  
+
     await this.otp.deleteResetToken(dto.resetToken);
 
-    return successRes({
-      message: 'Parol muvaffaqiyatli yangilandi',
-    }, 201);
+    return successRes(
+      {
+        message: 'Parol muvaffaqiyatli yangilandi',
+      },
+      201,
+    );
   }
 }
-

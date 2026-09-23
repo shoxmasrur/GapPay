@@ -1,12 +1,17 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Token } from '../../infrastructure/lib/Token';
-import { Roles, Status } from '../../common/enum';
-import { PrismaService } from '../prisma/prisma.service';
+import { Roles, Status } from '../enum';
+import { PrismaService } from '../../config/prisma/prisma.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly db: PrismaService) { }
-  async canActivate(context: ExecutionContext,): Promise<boolean> {
+  constructor(private readonly db: PrismaService) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
 
     const accessToken = req.cookies?.accessToken;
@@ -24,9 +29,7 @@ export class AuthGuard implements CanActivate {
       !Object.values(Status).includes(data.status) ||
       typeof data.deviceId !== 'number'
     ) {
-      throw new UnauthorizedException(
-        'Tizimga kirishda nosozlik',
-      );
+      throw new UnauthorizedException('Tizimga kirishda nosozlik');
     }
 
     const user = await this.db.user.findUnique({
@@ -35,9 +38,7 @@ export class AuthGuard implements CanActivate {
     });
 
     if (!user || user.status === Status.INACTIVE) {
-      throw new UnauthorizedException(
-        'Foydalanuvchi faol emas',
-      );
+      throw new UnauthorizedException('Foydalanuvchi faol emas');
     }
 
     req.user = {

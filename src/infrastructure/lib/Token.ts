@@ -60,18 +60,7 @@ export class Token {
   }
 
   static clearCookie(res: Response): void {
-    const isProduction = env.NODE_ENV === 'production';
-
-    res.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-    });
-
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-    });
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
   }
 }

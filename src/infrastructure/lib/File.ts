@@ -1,7 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { existsSync, mkdirSync, unlink, writeFile } from 'fs';
-import { extname, join } from 'path';
-import { randomUUID } from 'crypto';
+import { join } from 'path';
 import { fileTypeFromBuffer } from 'file-type';
 import { env } from '../../config';
 
@@ -22,32 +21,17 @@ export class File {
         throw new BadRequestException('Fayl formati notogri');
       }
 
-      const extensionMap: Record<string, string> = {
-        'image/jpeg': '.jpg',
-        'image/png': '.png',
-        'image/webp': '.webp',
-      };
-
-      const extension = extensionMap[detectedType.mime];
-
-      const fileName = `${randomUUID()}${extension}`;
+      const fileName = `${Date.now()}_${file.originalname}`;
 
       await new Promise<void>((res, rej) => {
         writeFile(join(File.filePath, fileName), file.buffer, (err) => {
-          if (err) {
-            rej(err);
-            return;
-          }
+          if (err) rej(err);
           res();
         });
       });
 
       return `${env.BASE_URL}/${fileName}`;
     } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw error;
-      }
-
       throw new BadRequestException('Fayl yuklashda muammo');
     }
   }
@@ -55,24 +39,16 @@ export class File {
   static async delete(fileName: string): Promise<void> {
     try {
       const file = fileName.split(`${env.BASE_URL}/`)[1];
-
       if (!file) {
         throw new BadRequestException('Fayl topilmadi');
       }
-
       const fileUrl = join(File.filePath, file);
-
       if (!existsSync(fileUrl)) {
         throw new BadRequestException('Fayl topilmadi');
       }
-
       await new Promise<void>((res, rej) => {
-        unlink(fileUrl, (err) => {
-          if (err) {
-            rej(err);
-            return;
-          }
-
+        unlink(fileUrl, (err: any) => {
+          if (err) rej(err);
           res();
         });
       });
@@ -88,14 +64,12 @@ export class File {
   static async exist(fileName: string): Promise<boolean> {
     try {
       const file = fileName.split(`${env.BASE_URL}/`)[1];
-
       if (!file) {
         return false;
       }
-
       const fileUrl = join(File.filePath, file);
 
-      return existsSync(fileUrl);
+      return existsSync(fileUrl) ? true : false;
     } catch {
       throw new BadRequestException('Faylni tekshirishda muammo');
     }

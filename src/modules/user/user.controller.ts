@@ -14,9 +14,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { AuthGuard } from '../../config/guard/jwt-auth.guard';
+import { AuthGuard } from '../../common/guard/jwt-auth.guard';
 import { UserUpdateDto } from './dto/user-update.dto';
-import { RolesGuard } from '../../config/guard/roles.guard';
+import { RolesGuard } from '../../common/guard/roles.guard';
 import { AccessRoles } from '../../common/decorator/roles.decorator';
 import { Roles } from '../../common/enum';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -24,11 +24,12 @@ import type { Request, Response } from 'express';
 import { UserId } from '../../common/decorator/current-user.decorator';
 import { FILE_OPTIONS } from '../../infrastructure/lib/File';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { ImageValidationPipe } from '../../common/pipe/image-validation.pipe';
 
 @Controller('user')
 @UseGuards(AuthGuard, RolesGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Get(':id')
   @AccessRoles('ID')
@@ -48,7 +49,7 @@ export class UserController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UserUpdateDto,
-    @UploadedFile() file?: Express.Multer.File,
+    @UploadedFile(new ImageValidationPipe()) file?: Express.Multer.File,
   ) {
     return this.userService.update(id, dto, file);
   }
@@ -63,7 +64,6 @@ export class UserController {
     return this.userService.remove(id, currentUserId, res);
   }
 
-
   @Patch(':id/status')
   @AccessRoles(Roles.SUPER_ADMIN)
   updateStatus(
@@ -72,5 +72,4 @@ export class UserController {
   ) {
     return this.userService.updateStatus(id, dto.status);
   }
-
 }

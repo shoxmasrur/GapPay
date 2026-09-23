@@ -9,7 +9,7 @@ import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @Throttle({ default: { ttl: 60_000, limit: 5 } })
@@ -27,25 +27,13 @@ export class AuthController {
   }
 
   @Post('refresh')
-  refresh(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    return this.authService.refreshToken(
-      req.cookies.refreshToken,
-      res,
-    );
+  refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return this.authService.refreshToken(req.cookies.refreshToken, res);
   }
 
   @Post('logout')
-  logout(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    return this.authService.logout(
-      req.cookies.refreshToken,
-      res,
-    );
+  logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(req.cookies.refreshToken, res);
   }
 
   @Post('forgot-password')

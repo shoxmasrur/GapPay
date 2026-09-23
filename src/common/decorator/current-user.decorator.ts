@@ -17,3 +17,17 @@ export const UserId = createParamDecorator(
     return Number(userId);
   },
 );
+
+export const UserRole = createParamDecorator(
+  (key: string | undefined, ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest();
+
+    const role = req.user?.role;
+
+    if (!role) {
+      throw new UnauthorizedException('Foydalanuvchi topilmadi');
+    }
+
+    return role;
+  },
+);

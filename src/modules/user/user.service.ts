@@ -1,4 +1,8 @@
-import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../config/prisma/prisma.service';
 import { successRes } from '../../common/helper/success-response';
 import { UserUpdateDto } from './dto/user-update.dto';
@@ -10,9 +14,7 @@ import { Status } from '../../../generated/prisma/enums';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly db: PrismaService,
-  ) { }
+  constructor(private readonly db: PrismaService) {}
 
   async findAll() {
     const users = await this.db.user.findMany({
@@ -123,27 +125,26 @@ export class UserService {
   }
 
   async updateStatus(id: number, status: Status) {
-  const user = await this.db.user.findUnique({
-    where: { id },
-  });
+    const user = await this.db.user.findUnique({
+      where: { id },
+    });
 
-  if (!user) {
-    throw new NotFoundException('Foydalanuvchi topilmadi');
+    if (!user) {
+      throw new NotFoundException('Foydalanuvchi topilmadi');
+    }
+
+    const updatedUser = await this.db.user.update({
+      where: { id },
+      data: { status },
+      select: {
+        id: true,
+        fullName: true,
+        phone: true,
+        role: true,
+        status: true,
+      },
+    });
+
+    return successRes(updatedUser);
   }
-
-  const updatedUser = await this.db.user.update({
-    where: { id },
-    data: { status },
-    select: {
-      id: true,
-      fullName: true,
-      phone: true,
-      role: true,
-      status: true,
-    },
-  });
-
-  return successRes(updatedUser);
 }
-}
- 

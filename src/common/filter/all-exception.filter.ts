@@ -1,4 +1,11 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus,Logger} from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { LoggerBot } from '../../infrastructure/bot/logger.bot';
 
@@ -27,10 +34,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message = exceptionResponse;
       }
 
-      if (
-        typeof exceptionResponse === 'object' &&
-        exceptionResponse !== null
-      ) {
+      if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
         const data = exceptionResponse as {
           error?: string;
           code?: string;
@@ -93,14 +97,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     details?: unknown;
     errorStack?: string;
   }) {
-    const {
-      request,
-      statusCode,
-      code,
-      message,
-      details,
-      errorStack,
-    } = data;
+    const { request, statusCode, code, message, details, errorStack } = data;
 
     const path = request.originalUrl ?? request.url;
 
@@ -117,25 +114,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
 <b>Details:</b>
 <pre>${this.escapeHtml(
-      details !== undefined
-        ? JSON.stringify(details, null, 2)
-        : 'N/A',
+      details !== undefined ? JSON.stringify(details, null, 2) : 'N/A',
     )}</pre>
 
 <b>Stack:</b>
 <pre>${this.escapeHtml(errorStack ?? 'No stack trace')}</pre>
 
 <b>User-Agent:</b>
-<pre>${this.escapeHtml(
-      request.headers['user-agent'] ?? 'unknown',
-    )}</pre>
+<pre>${this.escapeHtml(request.headers['user-agent'] ?? 'unknown')}</pre>
 
 <b>Time:</b> ${new Date().toLocaleString()}
     `.trim();
 
-    await LoggerBot.sendMessage(
-      telegramMessage.slice(0, 3900),
-    );
+    await LoggerBot.sendMessage(telegramMessage.slice(0, 3900));
   }
 
   private escapeHtml(value: unknown): string {

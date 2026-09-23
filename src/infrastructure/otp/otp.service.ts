@@ -10,7 +10,7 @@ import { env } from '../../config';
 
 @Injectable()
 export class OtpService {
-  constructor(private readonly redisService: RedisService) { }
+  constructor(private readonly redisService: RedisService) {}
 
   private normalizePhone(value: string): string {
     const phone = value.replace(/\D/g, '');
@@ -22,21 +22,6 @@ export class OtpService {
     }
 
     return `+${phone}`;
-  }
-  async getResetPhone(resetToken: string) {
-    const phone = await this.redisService.client.get(`otp:reset:${resetToken}`);
-
-    if (!phone) {
-      throw new BadRequestException(
-        'Reset token noto‘g‘ri yoki muddati tugagan',
-      );
-    }
-
-    return phone;
-  }
-
-  async deleteResetToken(resetToken: string) {
-    await this.redisService.client.del(`otp:reset:${resetToken}`);
   }
 
   private generateOtp(): string {
@@ -117,14 +102,10 @@ export class OtpService {
 
   async verifyOtp(phoneInput: string, code: string) {
     const redis = this.redisService.client;
-
     const phone = this.normalizePhone(phoneInput);
-
     const otpKey = this.otpKey(phone);
     const attemptsKey = this.attemptsKey(phone);
-
     const candidateHash = this.hashOtp(phone, code);
-
     const script = `
       local stored = redis.call('GET', KEYS[1])
 
@@ -206,5 +187,21 @@ export class OtpService {
       phone,
       resetToken,
     };
+  }
+
+  async getResetPhone(resetToken: string) {
+    const phone = await this.redisService.client.get(`otp:reset:${resetToken}`);
+
+    if (!phone) {
+      throw new BadRequestException(
+        'Reset token noto‘g‘ri yoki muddati tugagan',
+      );
+    }
+
+    return phone;
+  }
+
+  async deleteResetToken(resetToken: string) {
+    await this.redisService.client.del(`otp:reset:${resetToken}`);
   }
 }

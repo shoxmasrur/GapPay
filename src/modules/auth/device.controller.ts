@@ -9,8 +9,8 @@ import {
 
 import { DeviceService } from './device.service';
 
-import { AuthGuard } from '../../config/guard/jwt-auth.guard';
-import { RolesGuard } from '../../config/guard/roles.guard';
+import { AuthGuard } from '../../common/guard/jwt-auth.guard';
+import { RolesGuard } from '../../common/guard/roles.guard';
 
 import { UserId } from '../../common/decorator/current-user.decorator';
 import { RefreshToken } from '../../common/decorator/get-cookie.decorator';
@@ -31,10 +31,6 @@ export class DeviceController {
     @RefreshToken() refreshToken: string,
     @Param('id', ParseIntPipe) deviceId: number,
   ) {
-    return this.deviceService.remove(
-      userId,
-      refreshToken,
-      deviceId,
-    );
+    return this.deviceService.remove(userId, refreshToken, deviceId);
   }
 }
