@@ -73,7 +73,7 @@ export class AuthService {
       },
     });
 
-    if (deviceCount >= 2) {
+    if (deviceCount >= 5) {
       throw new BadRequestException(
         'Qurulmalar soni ikktadan ochmasligi kerak',
       );

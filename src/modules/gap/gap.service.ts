@@ -8,6 +8,7 @@ import { PrismaService } from '../../config/prisma/prisma.service';
 import { CreateGapDto } from './dto/create-gap.dto';
 import { GapStatus, Roles } from '../../common/enum';
 import { successRes } from '../../common/helper/success-response';
+import { UpdateGapDto } from './dto/update-gap.dto';
 
 @Injectable()
 export class GapService {
@@ -183,5 +184,9 @@ export class GapService {
     }
 
     return successRes(gap)
+  }
+
+  async update(userId: number, gapId: number, dto: UpdateGapDto) {
+    
   }
 }

@@ -7,6 +7,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { GapModule } from './modules/gap/gap.module';
+import { RoundModule } from './modules/round/round.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { GapModule } from './modules/gap/gap.module';
     UserModule,
     RedisModule,
     GapModule,
+    RoundModule
   ],
   providers: [
     {
