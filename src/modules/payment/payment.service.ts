@@ -46,17 +46,20 @@ export class PaymentService {
     });
 
     if (!member) {
-      throw new BadRequestException('User ushbu Gap aʼzosi emas');
+      throw new BadRequestException(
+        'User ushbu Gap aʼzosi emas',
+      );
     }
 
-    const existingPayment = await this.prisma.payment.findUnique({
-      where: {
-        roundId_userId: {
-          roundId,
-          userId,
+    const existingPayment =
+      await this.prisma.payment.findUnique({
+        where: {
+          roundId_userId: {
+            roundId,
+            userId,
+          },
         },
-      },
-    });
+      });
 
     if (existingPayment) {
       throw new ConflictException(
@@ -65,7 +68,9 @@ export class PaymentService {
     }
 
     if (amount <= 0) {
-      throw new BadRequestException('Amount 0 dan katta bo‘lishi kerak');
+      throw new BadRequestException(
+        'Amount 0 dan katta bo‘lishi kerak',
+      );
     }
 
     return this.prisma.payment.create({
