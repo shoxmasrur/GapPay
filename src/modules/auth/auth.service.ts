@@ -21,7 +21,7 @@ export class AuthService {
   constructor(
     private readonly db: PrismaService,
     private readonly otp: OtpService,
-  ) {}
+  ) { }
 
   async register(dto: RegisterDto) {
     const { fullName, phone, password } = dto;
@@ -196,14 +196,10 @@ export class AuthService {
   }
 
   async verifyOtp(dto: VerifyOtpDto) {
-    return this.otp.verifyOtp(dto.phone, dto.code);
-  }
-
-  async resetPassword(dto: ResetPasswordDto) {
-    const phone = await this.otp.getResetPhone(dto.resetToken);
+    await this.otp.verifyOtp(dto.phone, dto.code);
 
     const user = await this.db.user.findUnique({
-      where: { phone },
+      where: { phone: dto.phone },
     });
 
     if (!user) {
@@ -219,13 +215,6 @@ export class AuthService {
       },
     });
 
-    await this.otp.deleteResetToken(dto.resetToken);
-
-    return successRes(
-      {
-        message: 'Parol muvaffaqiyatli yangilandi',
-      },
-      201,
-    );
+    return successRes({message: 'OTP tasdiqlandi va parol muvaffaqiyatli yangilandi'}, 200,);
   }
 }

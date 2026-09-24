@@ -4,13 +4,13 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { createHmac, randomBytes, randomInt } from 'crypto';
+import { createHmac, randomInt } from 'crypto';
 import { RedisService } from '../../config/redis/redis.service';
 import { env } from '../../config';
 
 @Injectable()
 export class OtpService {
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService) { }
 
   private normalizePhone(value: string): string {
     const phone = value.replace(/\D/g, '');
@@ -177,31 +177,11 @@ export class OtpService {
     if (result === 0) {
       throw new BadRequestException('OTP kodi notogri');
     }
-    const resetToken = randomBytes(32).toString('hex');
-
-    await redis.set(`otp:reset:${resetToken}`, phone, 'EX', 600);
 
     return {
       success: true,
       verified: true,
       phone,
-      resetToken,
     };
-  }
-
-  async getResetPhone(resetToken: string) {
-    const phone = await this.redisService.client.get(`otp:reset:${resetToken}`);
-
-    if (!phone) {
-      throw new BadRequestException(
-        'Reset token noto‘g‘ri yoki muddati tugagan',
-      );
-    }
-
-    return phone;
-  }
-
-  async deleteResetToken(resetToken: string) {
-    await this.redisService.client.del(`otp:reset:${resetToken}`);
   }
 }

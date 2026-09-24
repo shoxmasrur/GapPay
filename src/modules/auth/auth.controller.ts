@@ -18,6 +18,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @Throttle({ default: { ttl: 60_000, limit: 5}})
   login(
     @Body() dto: LoginDto,
     @Req() req: Request,
@@ -46,11 +47,5 @@ export class AuthController {
   @Throttle({ default: { ttl: 60_000, limit: 5 } })
   verifyOtp(@Body() dto: VerifyOtpDto) {
     return this.authService.verifyOtp(dto);
-  }
-
-  @Post('reset-password')
-  @Throttle({ default: { ttl: 60_000, limit: 5 } })
-  resetPassword(@Body() dto: ResetPasswordDto) {
-    return this.authService.resetPassword(dto);
   }
 }

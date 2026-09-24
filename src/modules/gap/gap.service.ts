@@ -58,6 +58,12 @@ export class GapService {
       throw new BadRequestException('Bu gap faol emas');
     }
 
+    if (gap.duration > 0) {
+      throw new BadRequestException(
+        'Boshlangan gapga yangi azo qoshish mumkin emas',
+      );
+    }
+
     const user = await this.db.user.findUnique({ where: { id: userId } });
 
     if (!user) {

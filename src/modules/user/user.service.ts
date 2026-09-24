@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -10,10 +11,11 @@ import { File } from '../../infrastructure/lib/File';
 import type { Response } from 'express';
 import { Token } from '../../infrastructure/lib/Token';
 import { Status } from '../../../generated/prisma/enums';
+import { GapStatus } from '../../common/enum';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private readonly db: PrismaService) { }
 
   async findAll() {
     const users = await this.db.user.findMany({
@@ -105,6 +107,28 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('Foydalanuvchi topilmadi');
     }
+
+    const activeGaps = await this.db.gap.count({
+    where: {
+    status: GapStatus.ACTIVE,
+    OR: [
+      { organizerId: id },
+      {
+        members: {
+          some: {
+            userId: id,
+          },
+        },
+      },
+    ],
+  },
+});
+
+if (activeGaps > 0) {
+  throw new BadRequestException(
+    'Siz faol gapda qatnashyapsiz. Avval faol gaplardan chiqishingiz kerak.',
+  );
+}
 
     if (user.avatar && (await File.exist(user.avatar))) {
       await File.delete(user.avatar);
