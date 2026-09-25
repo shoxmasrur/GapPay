@@ -1,0 +1,18 @@
+{
+  "name": "gappay",
+  "private": true,
+  "description": "GapPay — gap (davra jamg'armasi) platformasi: NestJS backend + Next.js frontend",
+  "scripts": {
+    "install:all": "pnpm --dir backend install && pnpm --dir frontend install",
+    "dev": "concurrently -k -n backend,frontend -c blue,green \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "dev:backend": "cross-env PORT=3000 pnpm --dir backend start:dev",
+    "dev:frontend": "pnpm --dir frontend dev",
+    "build": "pnpm --dir backend build && pnpm --dir frontend build",
+    "start": "concurrently -k -n backend,frontend -c blue,green \"cross-env PORT=3000 pnpm --dir backend start:prod\" \"pnpm --dir frontend start\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0"
+  },
+  "packageManager": "pnpm@11.20.0"
+}
