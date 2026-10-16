@@ -15,7 +15,7 @@ export class GapService {
 
   async create(userId: number, dto: CreateGapDto) {
     const { name, description, maxMembers, monthlyAmount } = dto;
-
+    console.log('salom')
     return this.db.$transaction(async (tx) => {
       const gap = await tx.gap.create({
         data: {
